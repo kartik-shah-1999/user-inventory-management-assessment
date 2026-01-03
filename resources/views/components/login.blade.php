@@ -27,7 +27,7 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                        <p>Don't have an account? <a href="{{ route('adminSignupForm') }}">Register</a></p>
+                        <p>Don't have an account? <a href="{{ route($guard.'SignupForm') }}">Register</a></p>
                     </div>
             </div>
         </div>

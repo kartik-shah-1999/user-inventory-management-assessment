@@ -37,7 +37,7 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                        <p>Already have an account? <a href="{{ route('adminLoginForm') }}">Login</a></p>
+                        <p>Already have an account? <a href="{{ route($guard.'LoginForm') }}">Login</a></p>
                     </div>
             </div>
         </div>

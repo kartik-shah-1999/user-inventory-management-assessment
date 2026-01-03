@@ -7,7 +7,7 @@
             <a class="nav-link" href="{{ route('adminSignupForm') }}">Admin<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Customer</a>
+            <a class="nav-link" href="{{ route('customerSignupForm') }}">Customer</a>
         </li>
         </ul>
     </div>
