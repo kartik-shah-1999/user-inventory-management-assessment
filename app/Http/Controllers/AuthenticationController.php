@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SignupRequest;
 use App\Models\Admin;
+use App\Models\Customer;
+use App\UserRoleEnum;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
@@ -13,40 +15,52 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
-    public function adminSignupForm(){
-        return view('authentication-templates.admin.signup');
+    protected $guard;
+
+    public function __construct(){
+        $this->guard = getGuard();
+    }
+    protected function getModelFromGuard(){
+        $model = match($this->guard){
+            UserRoleEnum::ADMIN => Admin::class,
+            UserRoleEnum::CUSTOMER => Customer::class
+        };
+        return $model;
+    }
+    public function signupForm(){
+        return view('authentication-templates.'.$this->guard.'.signup');
     }
 
-    public function adminSignup(SignupRequest $request){
+    public function signUp(SignupRequest $request){
         $data = $request->only('name','email','pass1','pass2');
         try {
-            $user = Admin::create([
+            $user = self::getModelFromGuard()::create([
                 'uuid' => Str::uuid(),
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['pass1']),
             ]);
-            Auth::guard('admin')->login($user);
-            return redirect()->route('adminDashboard');
+            Auth::guard($this->guard)->login($user);
+            return redirect()->route($this->guard.'Dashboard');
         } catch (\Exception $e) {
-            Log::error('Admin signup failed: ' . $e->getMessage());
+            Log::error($this->guard.' signup failed: ' . $e->getMessage());
             return back()->withErrors('Error processing the request. Please try again later.');
         }
     }
 
-    public function adminLoginForm(){
-        return view('authentication-templates.admin.login');
+    public function loginForm(){
+        return view('authentication-templates.'.$this->guard.'.login');
     }
 
-    public function adminLogin(LoginRequest $request){
-        $creds = Auth::guard('admin')->attempt($request->only('email','password'));
+    public function login(LoginRequest $request){
+        $creds = Auth::guard($this->guard)->attempt($request->only('email','password'));
         if(!$creds){
             return back()->withErrors('Invalid credentials');
         }
-        return redirect()->intended(route('adminDashboard'),'200');
+        return redirect()->route($this->guard.'Dashboard');
     }
 
-    public function adminDashboard(){
-        return view('authentication-templates.admin.dashboard');
+    public function dashboard(){
+        return view('authentication-templates.'.$this->guard.'.dashboard');
     }
 }

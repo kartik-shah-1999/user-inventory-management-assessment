@@ -28,13 +28,26 @@ use App\UserRoleEnum;
                     break;
                 }
             }else if($guard === UserRoleEnum::CUSTOMER){
-                // switch(request()->url()){
-                //     case route('adminSignupForm'): $routeSubmissionHandler = route('adminSignup');
-                //     break; 
-                //     case route('adminLoginForm'): $routeSubmissionHandler = route('adminLogin');
-                //     break;
-                // }
+                switch(request()->url()){
+                    case route('customerSignupForm'): $routeSubmissionHandler = route('customerSignup');
+                    break; 
+                    case route('customerLoginForm'): $routeSubmissionHandler = route('customerLogin');
+                    break;
+                }
             }
             return $routeSubmissionHandler;
+        }
+    }
+
+    if(!function_exists('getGuard')){
+        function getGuard(){
+            $guard = null;
+            if(request()->is('admin/*')){
+                $guard = UserRoleEnum::ADMIN;
+            }
+            if(request()->is('customer/*')){
+                $guard = UserRoleEnum::CUSTOMER;
+            }
+            return $guard;
         }
     }
