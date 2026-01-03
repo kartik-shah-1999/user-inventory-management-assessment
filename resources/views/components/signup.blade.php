@@ -11,7 +11,7 @@
                         Sign Up
                     </div>
                     <div class="card-body">
-                        <form action="{{ formHandler($guard) }}" method="post">
+                        <form action="{{ formRouteHandler($guard) }}" method="post">
                             @csrf
                             <label for="name">Enter name</label>
                             <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}">
@@ -37,7 +37,7 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                        <p>Already have an account? <a href="">Login</a></p>
+                        <p>Already have an account? <a href="{{ route('adminLoginForm') }}">Login</a></p>
                     </div>
             </div>
         </div>

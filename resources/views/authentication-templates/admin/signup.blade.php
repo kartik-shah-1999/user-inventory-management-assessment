@@ -1,4 +1,4 @@
-@section('title','Sign Up')
+@section('title','Admin signup')
 
 <x-header />
 
