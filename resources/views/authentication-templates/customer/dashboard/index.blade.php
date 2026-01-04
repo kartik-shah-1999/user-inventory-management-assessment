@@ -2,6 +2,6 @@
 
 <x-header />
 
-Welcome to customer dashboard
+<x-dashboard.header />
 
 <x-footer />

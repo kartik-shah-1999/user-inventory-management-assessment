@@ -19,7 +19,7 @@ Route::prefix('admin')->group(function(){
       Route::post('/logout',[AuthenticationController::class,'logout'])->name('adminLogout');
       Route::get('/dashboard',[AuthenticationController::class,'dashboard'])->name('adminDashboard');
 
-      Route::prefix('product')->middleware(['auth:admin'])->group(function(){
+      Route::prefix('product')->group(function(){
         Route::get('/',[ProductController::class,'index'])->name('productForm');
         Route::post('/',[ProductController::class,'createProduct'])->name('createProduct');
       });
@@ -32,6 +32,7 @@ Route::prefix('customer')->group(function(){
     Route::get('/login',[AuthenticationController::class,'loginForm'])->name('customerLoginForm');
     Route::post('/login',[AuthenticationController::class,'login'])->name('customerLogin');
     Route::middleware(['customer.auth'])->group(function(){
+      Route::post('/logout',[AuthenticationController::class,'logout'])->name('customerLogout');
       Route::get('/dashboard',[AuthenticationController::class,'dashboard'])->name('customerDashboard');
     });
 });
