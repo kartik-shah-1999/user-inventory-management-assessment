@@ -18,7 +18,11 @@ Route::prefix('admin')->group(function(){
     Route::middleware(['admin.auth'])->group(function(){
       Route::post('/logout',[AuthenticationController::class,'logout'])->name('adminLogout');
       Route::get('/dashboard',[AuthenticationController::class,'dashboard'])->name('adminDashboard');
-      Route::get('/product',[ProductController::class,'index'])->name('productForm');
+
+      Route::prefix('product')->group(function(){
+        Route::get('/',[ProductController::class,'index'])->name('productForm');
+        Route::post('/',[ProductController::class,'createProduct'])->name('createProduct');
+      });
     });
 });
 

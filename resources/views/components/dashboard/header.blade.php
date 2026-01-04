@@ -25,13 +25,13 @@
 <div class="container-fluid mt-4">
     <ul class="nav nav-pills mb-3" id="adminTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" href=>
+            <a class="nav-link {{ request()->url() === route('adminDashboard') ? 'active' : '' }}" href={{ route('adminDashboard') }}>
                 <i class="bi bi-box-seam me-1"></i> View Products
             </a>
         </li>
 
         <li class="nav-item" role="presentation">
-            <a class="nav-link" href=>
+            <a class="nav-link {{ request()->url() === route('productForm') ? 'active' : '' }}" href={{ route('productForm') }}>
                 <i class="bi bi-plus-circle me-1"></i> Create Product
             </a>
         </li>
