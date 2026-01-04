@@ -40,4 +40,18 @@ class ProductController extends Controller
             return redirect()->route('adminDashboard')->with('error','Error in processing the request. Try again later');
         }
     }
+
+    public function deleteProduct(){
+        try{
+            if(request()->filled('id')){
+                $product = Product::findOrFail(request()->input('id'));
+                $this->authorize('delete',$product);
+                $product->delete();
+                return response()->json(['success' => 'Product deleted successfully']);
+            }
+        }catch(Exception $e){
+            Log::error('Error in deleting the product: '.$e->getMessage());
+            return response()->json(['error' => 'Error in processing the request.']);
+        }
+    }
 }

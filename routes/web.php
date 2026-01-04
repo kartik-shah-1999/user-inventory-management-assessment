@@ -22,6 +22,7 @@ Route::prefix('admin')->group(function(){
       Route::prefix('product')->group(function(){
         Route::get('/',[ProductController::class,'index'])->name('productForm');
         Route::post('/',[ProductController::class,'createProduct'])->name('createProduct');
+        Route::delete('/',[ProductController::class,'deleteProduct'])->name('deleteProduct');
       });
     });
 });

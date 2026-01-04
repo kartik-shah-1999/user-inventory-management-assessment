@@ -1,6 +1,6 @@
 @if($publishedProducts->isNotEmpty())
 <div class="fluid-container">
-    <table class="table table-bordered text-center">
+    <table class="table table-bordered text-center products">
         <thead>
             <th>Image</th>
             <th>Name</th>
@@ -22,8 +22,10 @@
                     <td>{{ $product->price }}</td>
                     <td>{{ $product->stock }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-secondary">Edit</button>
-                        <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                        <button type="button" class="btn btn-sm btn-secondary edit-product" data-id="{{ $product->id }}">Edit</button>
+                        @can('delete',$product)
+                            <button type="button" class="btn btn-sm btn-danger delete-product" data-id="{{ $product->id }}" data-url={{ route('deleteProduct') }} data-toggle="modal" data-target="#confirmationModal">Delete</button>
+                        @endcan
                     </td>
                 </tr>
             @endforeach
