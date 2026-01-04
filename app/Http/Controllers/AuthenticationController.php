@@ -6,6 +6,7 @@ use App\Http\Requests\SignupRequest;
 use App\Models\Admin;
 use App\Models\Customer;
 use App\UserRoleEnum;
+use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
@@ -60,7 +61,24 @@ class AuthenticationController extends Controller
         return redirect()->route($this->guard.'Dashboard');
     }
 
+    public function logout()
+    {
+        try {
+            Auth::guard($this->guard)->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+            return response()->json(['redirectUrl' => route($this->guard.'LoginForm')]);
+        } catch (Exception $e) {
+            Log::error('Logout failed', [
+                'message' => $e->getMessage(),
+            ]);
+            request()->session()->flush();
+            return redirect()->back()
+                ->withErrors('Something went wrong while logging out. Please try again.');
+        }
+    }
+
     public function dashboard(){
-        return view('authentication-templates.'.$this->guard.'.dashboard');
+        return view('authentication-templates.'.$this->guard.'.dashboard.index');
     }
 }
