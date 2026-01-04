@@ -4,4 +4,6 @@
 
 <x-dashboard.header />
 
+<x-dashboard.products :publishedProducts=$publishedProducts />
+
 <x-footer />

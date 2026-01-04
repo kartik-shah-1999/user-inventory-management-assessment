@@ -21,7 +21,7 @@ class ProductController extends Controller
         try{
             //Policy to ensure only authenticated user with admin guard can perform this operation
             $this->authorize('create', Product::class); 
-            
+
             if($request->has('image')){
                 $fileName = uniqid().'-'.$request->file('image')->getClientOriginalName();
                 $path = $request->file('image')->storeAs('products',$fileName,'public');
@@ -39,6 +39,5 @@ class ProductController extends Controller
             Log::error('Error in creating the product: '.$e->getMessage());
             return redirect()->route('adminDashboard')->with('error','Error in processing the request. Try again later');
         }
-        // if(!$product){}
     }
 }
