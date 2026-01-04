@@ -19,7 +19,7 @@ Route::prefix('admin')->group(function(){
       Route::post('/logout',[AuthenticationController::class,'logout'])->name('adminLogout');
       Route::get('/dashboard',[AuthenticationController::class,'dashboard'])->name('adminDashboard');
 
-      Route::prefix('product')->group(function(){
+      Route::prefix('product')->middleware(['auth:admin'])->group(function(){
         Route::get('/',[ProductController::class,'index'])->name('productForm');
         Route::post('/',[ProductController::class,'createProduct'])->name('createProduct');
       });
