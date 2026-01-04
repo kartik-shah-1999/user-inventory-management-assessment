@@ -18,8 +18,8 @@ class ProductController extends Controller
     public function createProduct(ProductRequest $request){
         try{
             if($request->has('image')){
-                $fileName = uniqid().$request->file('image')->getClientOriginalName();
-                $path = $request->file('image')->storeAs('products',$fileName);
+                $fileName = uniqid().'-'.$request->file('image')->getClientOriginalName();
+                $path = $request->file('image')->storeAs('products',$fileName,'public');
             }
             $product = Product::create([
                     'image' => $path ?? null,
