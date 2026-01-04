@@ -6,13 +6,14 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Product;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class ProductPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(Admin $user): bool
+    public function viewAny(?Authenticatable $user): bool
     {
         return true;
     }
@@ -20,7 +21,7 @@ class ProductPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(Admin $user, Product $product): bool
+    public function view(?Authenticatable $user, Product $product): bool
     {
         return true;
     }
@@ -28,15 +29,15 @@ class ProductPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create($user): bool
-    {
-        return auth()->guard('admin')->check();
+    public function create(?Authenticatable $user): bool
+    {   
+        return auth('admin')->check();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update($user, Product $product): bool
+    public function update(?Authenticatable $user, Product $product): bool
     {
         if (!auth()->guard('admin')->check()) return false;
         return $product->created_by === auth()->guard('admin')->user()->uuid;
@@ -46,7 +47,7 @@ class ProductPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete($user, Product $product): bool
+    public function delete(?Authenticatable $user, Product $product): bool
     {
         if (!auth()->guard('admin')->check()) return false;
         return $product->created_by === auth()->guard('admin')->user()->uuid;
@@ -55,7 +56,7 @@ class ProductPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore($user, Product $product): bool
+    public function restore(?Authenticatable $user, Product $product): bool
     {
         if (!auth()->guard('admin')->check()) return false;
         return $product->created_by === auth()->guard('admin')->user()->uuid;
@@ -64,7 +65,7 @@ class ProductPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete($user, Product $product): bool
+    public function forceDelete(?Authenticatable $user, Product $product): bool
     {
         if (!auth()->guard('admin')->check()) return false;
         return $product->created_by === auth()->guard('admin')->user()->uuid;
