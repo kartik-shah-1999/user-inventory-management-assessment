@@ -42,7 +42,7 @@ class ProductPolicy
     public function update(?Authenticatable $user, Product $product): bool
     {
         if (!auth()->guard(UserRoleEnum::ADMIN)->check()) return false;
-        return $product->created_by === auth()->guard('admin')->user()->uuid;
+        return $product->created_by === auth()->guard(UserRoleEnum::ADMIN)->user()->uuid;
     }
 
 

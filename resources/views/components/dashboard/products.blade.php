@@ -8,7 +8,7 @@
             <th>Category</th>
             <th>Price</th>
             <th>Stock</th>
-            <th></th>
+            @can('create',\App\Models\Product::class)<th></th>@endcan
         </thead>
         <tbody>
             @foreach ($publishedProducts as $key => $product)
@@ -21,12 +21,16 @@
                     <td>{{ $product->category ?? 'Uncategorized' }}</td>
                     <td>{{ $product->price }}</td>
                     <td>{{ $product->stock }}</td>
+                    @can('create',\App\Models\Product::class)
                     <td>
-                        <button type="button" class="btn btn-sm btn-secondary update-product" onclick="window.location.href='product/update/{{ $product->id }}'">Edit</button>
+                        @can('update',$product)
+                            <button type="button" class="btn btn-sm btn-secondary update-product" onclick="window.location.href='product/update/{{ $product->id }}'">Edit</button>
+                        @endcan
                         @can('delete',$product)
                             <button type="button" class="btn btn-sm btn-danger delete-product" data-id="{{ $product->id }}" data-url={{ route('deleteProduct') }} data-toggle="modal" data-target="#confirmationModal">Delete</button>
                         @endcan
                     </td>
+                    @endcan
                 </tr>
             @endforeach
         </tbody>

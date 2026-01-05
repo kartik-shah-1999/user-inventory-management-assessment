@@ -42,23 +42,24 @@ class ProductController extends Controller
             return redirect()->route('adminDashboard')->with('error','Error in processing the request. Try again later');
         }
     }
-
-    public function updateProductForm(Product $id){
-        $product = $id->except('created_by','created_at', 'updated_at');
+    public function updateProductForm($id){
+        $product = Product::findOrFail($id);
         return view('authentication-templates.admin.dashboard.updateproduct')->with('product',$product);
     }
-    public function updateProduct(ProductRequest $request, Product $product){
+    public function updateProduct(ProductRequest $request, $id){
         try{
+            $product = Product::findOrFail($id);
+            $this->authorizeForUser(auth(UserRoleEnum::ADMIN)->user(), 'update', $product);
             $path = null;
             if($request->hasFile('image')){
-                 if(!is_null($product['image']) && Storage::disk('public')->exists($product['image'])){
-                    Storage::disk('public')->delete($product['image']);
+                 if(!is_null($product->image) && Storage::disk('public')->exists($product->image)){
+                    Storage::disk('public')->delete($product->image);
                 }
                 $fileName = uniqid().'-'.$request->file('image')->getClientOriginalName();
                 $path = $request->file('image')->storeAs('products',$fileName,'public');
             }else{
-                if(!is_null($product['image'])){
-                    $path = $product['image'];
+                if(!is_null($product->image)){
+                    $path = $product->image;
                 }
             }
             $product->update([

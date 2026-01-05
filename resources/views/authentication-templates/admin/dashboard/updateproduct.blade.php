@@ -2,6 +2,7 @@
 
 <x-dashboard.header />
 
+@can('update',$product)
 @php
     $formClass = "form-control w-100 mb-2";
 @endphp
@@ -51,5 +52,14 @@
         <button type="submit" class="btn btn-secondary w-100">Update product</button>
     </form>
 </div>
+@endcan
+
+@cannot('delete', $product)
+<div class="container text-center">
+    <p class="text-danger" style="font-size: 2rem;">
+        You are not authorized to update this product.
+    </p>
+</div>
+@endcannot
 
 <x-footer />
