@@ -2,23 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SignupRequest;
+use Exception;
 use App\Models\Admin;
-use App\Models\Customer;
 use App\UserRoleEnum;
+use App\Models\Product;
+use App\Models\Customer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\SignupRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
     protected $guard;
-
+    public $publishedProducts;
     public function __construct(){
         $this->guard = getGuard();
+        $query = Product::query();
+        if(auth()->guard(UserRoleEnum::ADMIN)->check()){
+            $query->where(
+                        'created_by',
+                        auth()->guard(UserRoleEnum::ADMIN)->user()->uuid
+                         );
+        }
+        $this->publishedProducts = $query->orderByDesc('created_at')
+                                   ->paginate(5);
     }
     protected function getModelFromGuard(){
         $model = match($this->guard){
@@ -60,7 +71,25 @@ class AuthenticationController extends Controller
         return redirect()->route($this->guard.'Dashboard');
     }
 
+    public function logout()
+    {
+        try {
+            Auth::guard($this->guard)->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+            return response()->json(['redirectUrl' => route($this->guard.'LoginForm')]);
+        } catch (Exception $e) {
+            Log::error('Logout failed', [
+                'message' => $e->getMessage(),
+            ]);
+            request()->session()->flush();
+            return redirect()->back()
+                ->withErrors('Something went wrong while logging out. Please try again.');
+        }
+    }
+
     public function dashboard(){
-        return view('authentication-templates.'.$this->guard.'.dashboard');
+        return view('authentication-templates.'.$this->guard.'.dashboard.index')
+               ->with('publishedProducts',$this->publishedProducts);
     }
 }
