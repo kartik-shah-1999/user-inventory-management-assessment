@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Product;
+use App\UserRoleEnum;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -23,7 +24,8 @@ class ProductPolicy
      */
     public function view(?Authenticatable $user, Product $product): bool
     {
-        return true;
+        // if (!auth()->guard(UserRoleEnum::ADMIN)->check()) return false;
+        // return $product->created_by === auth()->guard('admin')->user()->uuid;
     }
 
     /**
@@ -31,7 +33,7 @@ class ProductPolicy
      */
     public function create(?Authenticatable $user): bool
     {   
-        return auth('admin')->check();
+        return auth(UserRoleEnum::ADMIN)->check();
     }
 
     /**
@@ -39,7 +41,7 @@ class ProductPolicy
      */
     public function update(?Authenticatable $user, Product $product): bool
     {
-        if (!auth()->guard('admin')->check()) return false;
+        if (!auth()->guard(UserRoleEnum::ADMIN)->check()) return false;
         return $product->created_by === auth()->guard('admin')->user()->uuid;
     }
 
@@ -49,8 +51,8 @@ class ProductPolicy
      */
     public function delete(?Authenticatable $user, Product $product): bool
     {
-        if (!auth()->guard('admin')->check()) return false;
-        return $product->created_by === auth()->guard('admin')->user()->uuid;
+        if (!auth()->guard(UserRoleEnum::ADMIN)->check()) return false;
+        return $product->created_by === auth()->guard(UserRoleEnum::ADMIN)->user()->uuid;
     }
 
     /**
@@ -58,8 +60,8 @@ class ProductPolicy
      */
     public function restore(?Authenticatable $user, Product $product): bool
     {
-        if (!auth()->guard('admin')->check()) return false;
-        return $product->created_by === auth()->guard('admin')->user()->uuid;
+        if (!auth()->guard(UserRoleEnum::ADMIN)->check()) return false;
+        return $product->created_by === auth()->guard(UserRoleEnum::ADMIN)->user()->uuid;
     }
 
     /**
@@ -67,7 +69,7 @@ class ProductPolicy
      */
     public function forceDelete(?Authenticatable $user, Product $product): bool
     {
-        if (!auth()->guard('admin')->check()) return false;
-        return $product->created_by === auth()->guard('admin')->user()->uuid;
+        if (!auth()->guard(UserRoleEnum::ADMIN)->check()) return false;
+        return $product->created_by === auth()->guard(UserRoleEnum::ADMIN)->user()->uuid;
     }
 }

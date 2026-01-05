@@ -22,7 +22,7 @@
                     <td>{{ $product->price }}</td>
                     <td>{{ $product->stock }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-secondary edit-product" data-id="{{ $product->id }}">Edit</button>
+                        <button type="button" class="btn btn-sm btn-secondary update-product" onclick="window.location.href='product/update/{{ $product->id }}'">Edit</button>
                         @can('delete',$product)
                             <button type="button" class="btn btn-sm btn-danger delete-product" data-id="{{ $product->id }}" data-url={{ route('deleteProduct') }} data-toggle="modal" data-target="#confirmationModal">Delete</button>
                         @endcan

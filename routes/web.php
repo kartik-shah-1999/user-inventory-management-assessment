@@ -19,11 +19,15 @@ Route::prefix('admin')->group(function(){
       Route::post('/logout',[AuthenticationController::class,'logout'])->name('adminLogout');
       Route::get('/dashboard',[AuthenticationController::class,'dashboard'])->name('adminDashboard');
 
+      // product management routes with admin restrictions
       Route::prefix('product')->group(function(){
         Route::get('/',[ProductController::class,'index'])->name('productForm');
         Route::post('/',[ProductController::class,'createProduct'])->name('createProduct');
+        Route::get('/update/{id}',[ProductController::class,'updateProductForm'])->name('updateProductForm');
+        Route::put('/update/{product}',[ProductController::class,'updateProduct'])->name('updateProduct');
         Route::delete('/',[ProductController::class,'deleteProduct'])->name('deleteProduct');
       });
+      // end of product management routes
     });
 });
 

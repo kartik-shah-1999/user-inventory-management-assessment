@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\UserRoleEnum;
 use Exception;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\UserRoleEnum;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProductRequest;
+use function PHPUnit\Framework\isNull;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProductController extends Controller
 {
@@ -20,9 +22,9 @@ class ProductController extends Controller
     public function createProduct(ProductRequest $request){
         try{
             //Policy to ensure only authenticated user with admin guard can perform this operation
-            $this->authorize('create', Product::class); 
+            $this->authorizeForUser(auth(UserRoleEnum::ADMIN)->user(),'create', Product::class); 
 
-            if($request->has('image')){
+            if($request->hasFile('image')){
                 $fileName = uniqid().'-'.$request->file('image')->getClientOriginalName();
                 $path = $request->file('image')->storeAs('products',$fileName,'public');
             }
@@ -41,11 +43,42 @@ class ProductController extends Controller
         }
     }
 
+    public function updateProductForm(Product $id){
+        $product = $id->except('created_by','created_at', 'updated_at');
+        return view('authentication-templates.admin.dashboard.updateproduct')->with('product',$product);
+    }
+    public function updateProduct(ProductRequest $request, Product $product){
+        try{
+            $path = null;
+            if($request->hasFile('image')){
+                 if(!is_null($product['image']) && Storage::disk('public')->exists($product['image'])){
+                    Storage::disk('public')->delete($product['image']);
+                }
+                $fileName = uniqid().'-'.$request->file('image')->getClientOriginalName();
+                $path = $request->file('image')->storeAs('products',$fileName,'public');
+            }else{
+                if(!is_null($product['image'])){
+                    $path = $product['image'];
+                }
+            }
+            $product->update([
+                'image' => $path,
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'price' => $request->input('price'),
+                'stock' => $request->input('stock'),
+            ]);
+            return back()->with('success', 'Product updated successfully');
+        }catch(Exception $e){
+            Log::error('Error in updating the product: '.$e->getMessage());
+            return back()->with('error', 'Error in processing the request.');
+        }
+    }
     public function deleteProduct(){
         try{
             if(request()->filled('id')){
                 $product = Product::findOrFail(request()->input('id'));
-                $this->authorize('delete',$product);
+                $this->authorizeForUser(auth(UserRoleEnum::ADMIN)->user(),'delete',$product);
                 $product->delete();
                 return response()->json(['success' => 'Product deleted successfully']);
             }
