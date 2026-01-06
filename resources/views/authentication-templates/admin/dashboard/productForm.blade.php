@@ -25,9 +25,10 @@
             {{ validationMessage($message) }}
         @enderror
         <label for="category">Category</label>
-        <select name="category" class="{{ $formClass }}" id="category">
-            <option value="">Select category</option>
-        </select>
+        <input type="text" name="category" id="category" class="form-control w-100" value="{{ old('category') }}">
+         @error('category')
+            {{ validationMessage($message) }}
+        @enderror
         <label for="price">Price</label>
         <input type="number" name="price" id="price" class="{{ $formClass }}" value="{{ old('price') }}">
         @error('price')

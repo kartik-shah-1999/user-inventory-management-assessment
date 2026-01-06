@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Product extends Model
 {
@@ -11,8 +12,14 @@ class Product extends Model
                             'name', 
                             'description', 
                             'price', 
-                            'category_id', 
+                            'category', 
                             'stock',
                             'created_by'
                          ];
+
+    protected function category()    {
+        return Attribute::make(
+            get: fn ($value) => $value ?? 'Uncategorized',
+        );
+    }
 }

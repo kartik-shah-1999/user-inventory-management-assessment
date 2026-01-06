@@ -17,10 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->float('price');
-            $table->foreignId('category_id')
-                  ->nullable()
-                  ->constrained('categories')
-                  ->nullOnDelete();
+            $table->string('category')
+                  ->nullable();
             $table->unsignedInteger('stock');
             $table->foreignUuid('created_by')
                   ->references('uuid')
