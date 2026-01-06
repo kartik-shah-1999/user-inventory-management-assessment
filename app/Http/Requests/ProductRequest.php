@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\UserRoleEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +13,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::guard('admin')->check();
+        return Auth::guard(UserRoleEnum::ADMIN)->check();
     }
 
     /**
@@ -26,7 +27,7 @@ class ProductRequest extends FormRequest
             'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'name' => ['required', 'string', 'max:30'],
             'description' => ['required', 'string', 'max:100'],
-            'category_id' => ['nullable'],
+            'category' => ['nullable', 'string', 'max:20'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer']
         ];
@@ -45,6 +46,9 @@ class ProductRequest extends FormRequest
             'description.required' => 'Description is required',
             'description.string' => 'Please enter a valid description',
             'description.max' => 'Description cannot have more than :max characters',
+
+            'category.string' => 'Please enter a valid category',
+            'category.max' => 'Category cannot have more than :max characters',
 
             'price.required' => 'Price is required',
             'price.string' => 'Please enter a valid price',

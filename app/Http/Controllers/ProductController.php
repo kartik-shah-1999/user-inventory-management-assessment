@@ -32,6 +32,7 @@ class ProductController extends Controller
                     'image' => $path ?? null,
                     'name' => $request->input('name'),
                     'description' => $request->input('description'),
+                    'category' => $request->input('category') ?? null,
                     'price' => $request->input('price'),
                     'stock' => $request->input('stock'),
                     'created_by' => auth()->guard(UserRoleEnum::ADMIN)->user()->uuid
@@ -66,6 +67,7 @@ class ProductController extends Controller
                 'image' => $path,
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
+                'category' => $request->input('category') ?? null,
                 'price' => $request->input('price'),
                 'stock' => $request->input('stock'),
             ]);
