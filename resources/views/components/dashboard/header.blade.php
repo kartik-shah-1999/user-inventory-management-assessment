@@ -40,7 +40,7 @@
         @endcan
 
         <li class="nav-item" role="presentation">
-            <a class="nav-link" href=>
+            <a class="nav-link {{ request()->url() === route('listUsers') ? 'active' : '' }}" href={{ route('listUsers') }}>
                 <i class="bi bi-people me-1"></i> View Users
             </a>
         </li>

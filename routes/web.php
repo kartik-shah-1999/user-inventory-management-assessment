@@ -1,11 +1,14 @@
 <?php
 
-use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserManagerController;
+use App\Http\Controllers\AuthenticationController;
 
 Route::view('/','home')->name('home');
+
+Route::put('/syncUserStatus',[UserManagerController::class,'syncUserStatus'])->name('Status');
 
 /*
   admin routes 
@@ -28,6 +31,9 @@ Route::prefix('admin')->group(function(){
         Route::delete('/',[ProductController::class,'deleteProduct'])->name('deleteProduct');
       });
       // end of product management routes
+
+      //users listing route with admin restrictions
+      Route::get('/users',[UserManagerController::class,'listUsers'])->name('listUsers');
     });
 });
 

@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Customer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Events\UsersPresenceEvent;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\SignupRequest;
@@ -52,8 +53,9 @@ class AuthenticationController extends Controller
                 'password' => Hash::make($data['pass1']),
             ]);
             Auth::guard($this->guard)->login($user);
+            broadcast(new UsersPresenceEvent())->toOthers();
             return redirect()->route($this->guard.'Dashboard');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($this->guard.' signup failed: ' . $e->getMessage());
             return back()->withErrors('Error processing the request. Please try again later.');
         }
@@ -68,6 +70,7 @@ class AuthenticationController extends Controller
         if(!$creds){
             return back()->withErrors('Invalid credentials');
         }
+        broadcast(new UsersPresenceEvent())->toOthers();
         return redirect()->route($this->guard.'Dashboard');
     }
 
