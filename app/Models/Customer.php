@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 class Customer extends Authenticatable
 {
     use HasFactory, Notifiable;
-    protected $fillable = ['uuid', 'name', 'email', 'password'];
+    protected $fillable = ['uuid', 'name', 'email', 'password', 'is_online', 'last_seen_at'];
     protected $hidden = ['password'];
     protected $primaryKey = 'uuid';
     public $incrementing = false;

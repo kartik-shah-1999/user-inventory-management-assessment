@@ -9,3 +9,61 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.status-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Tooltip box */
+.tooltip-right {
+    position: absolute;
+    left: 140%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #212529;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+}
+
+/* Tooltip arrow */
+.tooltip-right::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #212529 transparent transparent;
+}
+
+/* Show tooltip on hover */
+.status-wrapper:hover .tooltip-right {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Status dot (for reference) */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.status-dot.online {
+    background-color: #28a745;
+}
+
+.status-dot.offline {
+    background-color: #dc3545;
+}
+
